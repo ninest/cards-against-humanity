@@ -1,0 +1,135 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#000000" />
+
+  <title>Host - CAH</title>
+
+  <link rel="stylesheet" href="/styles/normalize.css">
+  <link rel="stylesheet" href="/styles/init.css">
+  <link rel="stylesheet" href="/styles/host.css">
+  <link rel="stylesheet" href="/styles/cards.css">
+</head>
+<body>
+  
+  <div id="pregame">
+    <h1>Cards Against Humanity</h1>
+    <div class="container">
+      <div>Please share this link with your friends. If you have any:</div>
+      <textarea id="link" placeholder="Loading ..."></textarea>
+      <div class="join-info"><div id="players">0</div> players have joined the game</div>
+
+      <div id="game_starting">
+        <button id="start_button" class="blue">Start</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="black_card"></div>
+  <div id="white_cards"></div>
+
+  <div id="round_end">
+    <div class="message">A round has ended. Start another?</div>
+    <button id="next_round">Next round</button>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="./functions.js"></script>
+  <script src="./cards.js"></script>
+  <script>
+    let $pregame = document.querySelector('#pregame')
+    let $linkTextarea = document.querySelector('#link')
+    let $playerCount = document.querySelector('#players')
+    let $gameStarting = document.querySelector('#game_starting')
+    let $startGameButton = document.querySelector('#start_button')
+
+    let $blackCard = document.querySelector('#black_card')
+    let $whiteCards = document.querySelector('#white_cards')
+
+    let $roundEnd = document.querySelector('#round_end')
+    let $nextRoundButton = document.querySelector('#next_round')
+
+    // shuffle them
+    let blackCards = BLACK_CARDS
+
+    // other info
+    var noPlayers;
+    var whiteCardsReceived = []
+
+    var socket = io()
+    let roomID = Math.random().toString(36).substring(2)
+
+    $linkTextarea.value = `${location.origin}/player#${roomID}`
+
+    // joining room
+    socket.emit('join:room', {roomID: roomID, role: 'host'})
+
+    socket.on('no_connected', (data) => {
+      // incrementing dispaly
+      $playerCount.innerText = parseInt($playerCount.innerText) + 1
+      noPlayers = parseInt($playerCount.innerText)
+      if (parseInt($playerCount.innerText) == 1) {
+        // if there are 1 players, start the game. change to 2 later
+        $gameStarting.style.display = 'block'
+      }
+    })
+
+    $startGameButton.onclick = () => {
+      // shuffle cards
+      round()
+    }
+
+    // called every round
+    function round() {
+      socket.emit('start_game', {roomID: roomID}) // alerts players to start round()
+
+      // reset data from previous rounds
+      whiteCardsReceived = []
+
+      hideElement($pregame)
+      hideElement($roundEnd)
+      // clear white cards from previous round
+      showElement($blackCard)
+      clearElement($whiteCards)
+
+      let newBlackCard = blackCards.splice(0, 1)
+      $blackCard.innerHTML = newBlackCard
+    }
+
+    socket.on('card_chosen', (data) => {
+      whiteCardsReceived.push(data.card)
+      if (whiteCardsReceived.length == noPlayers) {
+        for (i=0; i<whiteCardsReceived.length; i++) {
+          // whiteCardsRec[i] is already escaped
+          $whiteCards.innerHTML += `
+            <div
+              class="card"
+              onclick='selectWhiteCard(this, "${whiteCardsReceived[i]}")'
+            > ${unescape(whiteCardsReceived[i])}
+            </div>
+          `
+        }
+      }
+    })
+
+    function selectWhiteCard(el, card) {
+      console.log('Selected ', card)
+      el.style.border = '1px solid red'
+
+      // show white card in black card blank
+      let p = $blackCard.innerHTML
+      let n = `${p.split("__")[0]}<i><u>${unescape(card)}</u></i>${p.split("__")[1]}`
+      $blackCard.innerHTML = n
+
+      showElement($roundEnd)
+    }
+
+    $nextRoundButton.onclick = function() {
+      console.log('new round')
+      round()
+    }
+  </script>
+</body>
+</html>

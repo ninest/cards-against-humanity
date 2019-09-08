@@ -1,0 +1,27 @@
+/* 
+  Add to both files.
+  These styles will be overrided many times
+*/
+
+/* both */
+#game_starting {
+  display: none;
+}
+
+/* host.html */
+#black_card {
+  display: none;
+}
+#round_end {
+  display: none;
+}
+
+/* player.html */
+#hand_cards {
+  display: none;
+}
+
+/* some values */
+:root {
+  --main-padding: 1em 10%;
+}

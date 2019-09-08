@@ -1,0 +1,88 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#ffffff" />
+
+  <title>Player - CAH</title>
+
+  <link rel="stylesheet" href="/styles/normalize.css">
+  <link rel="stylesheet" href="/styles/init.css">
+  <link rel="stylesheet" href="/styles/player.css">
+  <link rel="stylesheet" href="/styles/cards.css">
+</head>
+<body>
+
+  <div id="pregame">
+    <h1>Please ensure that you have entered the correct link</h1>
+    <div>The game will automatically begin when the host starts it.</div>
+  </div>
+
+  <div id="white_cards"></div>
+
+  <script src="./cards.js"></script>
+  <script src="./functions.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    let $pregame = document.querySelector('#pregame')
+    let $handCards = document.querySelector('#white_cards')
+
+    // shuffle them
+    let handCards = WHITE_CARDS.splice(0, 3)
+
+    var socket = io()
+    let roomID = location.hash.split('#')[1]
+
+    // joining room
+    socket.emit('join:room', {roomID: roomID, role: 'player'})
+
+    socket.on('start_game', (data) => {
+      hideElement($pregame)
+      round()
+    })
+
+    // called at start of evey round
+    function round() {
+      // fix from previous rounds: clear HTML of white cards
+      clearElement($handCards)
+
+      // draw one card
+      handCards.push(WHITE_CARDS.splice(0,1)[0])
+      console.log(handCards)
+
+      // display cards
+      for (i=0; i<handCards.length; i++)  {
+        $handCards.innerHTML += `
+          <div 
+            class="card"
+            onclick='chooseCard(this, escape("${handCards[i]}"))'
+          > ${handCards[i]}
+          </div>
+        `
+      }
+    }
+
+    function chooseCard(el, card) {
+      // white card chosen
+      socket.emit('card_chosen', {roomID: roomID, card: card})
+
+      // show that white card chosen
+      el.style.border = '1px solid red'
+
+      // remove card from hand
+      console.log('Removing card from hand')
+      console.log(handCards)
+      console.log(unescape(card))
+      let index = handCards.indexOf(unescape(card))
+      handCards.splice(index, 1)
+
+      // next card will be drawn in round()
+    }
+    // error
+    socket.on('error', (data) => {
+      alert(data.message)
+    })
+  </script>
+</body>
+</html>

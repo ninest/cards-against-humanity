@@ -1,0 +1,70 @@
+#pregame * {
+}
+  h1 {
+    color: white;
+    background-color: black;
+    padding: var(--main-padding);
+  }
+  .container {
+    margin: var(--main-padding);
+  }
+  .container > * + * {
+    margin-top: 1em
+  }
+    textarea {
+      width: 100%;
+      padding: 0.5em;
+      border-radius: 0.2em;
+
+      /* height: 4em; */
+
+      border: 1px solid black;
+
+      resize: none
+    }
+      textarea:focus {
+        outline: none;
+        border: 2px solid blue;
+      }
+  
+    .join-info {
+      text-align: center;
+    }
+      #players {
+        font-size: 10em;
+        font-weight: 900;
+      }
+  
+button {
+  width: 100%;
+  padding: 0.5em;
+  border-radius: 0.2em;
+  border: none;
+  background-color: blue;
+  color: white;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+}
+
+#black_card {
+  padding: var(--main-padding);
+  background-color: black;
+  color: white;
+  font-size: 3em;
+  font-weight: 900;
+}
+
+
+
+#round_end {
+  padding: var(--main-padding);
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+  .message {
+    margin-bottom: 0.5em;
+  }
