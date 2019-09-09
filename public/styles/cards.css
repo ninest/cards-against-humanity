@@ -13,6 +13,8 @@
     padding: 0.5em;
 
     font-weight: 700;
-    height: 250px;
+    font-size: 1.3rem;
+    line-height: 1.5;
+    height: 230px;
     hyphens: manual;
   }

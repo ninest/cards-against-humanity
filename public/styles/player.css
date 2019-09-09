@@ -1,4 +1,7 @@
 #pregame {
-  padding: 1em
+  padding: var(--main-padding)
 }
 
+.github {
+  position: absolute;
+}

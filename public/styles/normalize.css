@@ -78,7 +78,11 @@ pre {
 
 a {
   background-color: transparent;
+  text-decoration: unset;
 }
+  a:hover, a:focus {
+    text-decoration: underline
+  }
 
 /**
  * 1. Remove the bottom border in Chrome 57-

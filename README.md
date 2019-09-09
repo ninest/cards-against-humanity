@@ -10,7 +10,7 @@
 Mobile devices recommended
 
 ## To do
-- [ ] Shuffle cards. Currently, all users will get the same hand of white cards. The order of black cards is also the same.
+- [x] Shuffle cards. Currently, all users will get the same hand of white cards. The order of black cards is also the same.
 - [ ] Find a way to "shuffle the deck and distribute cards" throught the sockets. Even when the cards are shuffled, there's a probability that two players get the same white cards. This will be a lot more difficult to fix.
 
 ## Built with

@@ -25,3 +25,12 @@
 :root {
   --main-padding: 1em 10%;
 }
+
+.github {
+  padding: var(--main-padding);
+  position: relative;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  /* width: 100%; */
+}
