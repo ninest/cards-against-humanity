@@ -52,7 +52,7 @@
     let $nextRoundButton = document.querySelector('#next_round')
 
     // shuffle them
-    let blackCards = BLACK_CARDS
+    let blackCards = shuffle(BLACK_CARDS)
 
     // other info
     var noPlayers;
@@ -77,7 +77,6 @@
     })
 
     $startGameButton.onclick = () => {
-      // shuffle cards
       round()
     }
 
